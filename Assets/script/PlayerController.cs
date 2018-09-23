@@ -7,16 +7,21 @@ public class PlayerController : MonoBehaviour {
 
     public float speed;
     public Text countText;
+    public Text scoreText;
     public Text winText;
+    public GameObject player;
 
     private Rigidbody rb;
     private int count;
+    private int score;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         count = 0;
+        score = 0;
         SetCountText ();
+        SetScoreText();
         winText.text = "";
     }
 
@@ -37,19 +42,44 @@ public class PlayerController : MonoBehaviour {
         {
             other.gameObject.SetActive(false);
             count = count + 1;
-            SetCountText ();
+            score = score + 1;
+            SetCountText();
+            SetScoreText();
             if (Input.GetKey("escape"))
                 Application.Quit();
         }
+        if (other.gameObject.CompareTag("Non-Pickups"))
+        {
+            other.gameObject.SetActive(false);
+            score = score - 1;
+            SetScoreText();
+        }
+        
     }
 
     void SetCountText ()
     {
         countText.text = "Count: " + count.ToString ();
-        if(count >= 12)
+        scoreText.text = "Score: " + score.ToString();
+        if (count == 12)
         {
-            winText.text = "You Win";
+            winText.text = "Congradulations You Won! Your score is:" + score.ToString();
+            transform.position = new Vector3(21.14f, 0.489f, 7.56f);
+        }
+        else if (count == 24)
+        {
+            winText.text = "Congradulations You Won! Your score is:" + score.ToString();
+        }
+        else
+        {
+            winText.text = "";
         }
     }
+
+    void SetScoreText()
+    {
+        scoreText.text = "Score: " + score.ToString();
+    }
+
 
 }
